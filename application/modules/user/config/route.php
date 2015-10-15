@@ -1,0 +1,2 @@
+<?php
+$route['user'] = 'user';

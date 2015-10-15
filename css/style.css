@@ -1,0 +1,13 @@
+#wrapper{
+    margin-top:30px;
+}
+body{
+    background-color: #ecf0f5;
+}
+
+.del-chat{
+    position:absolute;
+    top:5px;
+    right:5px;
+    color:#fff;
+}
