@@ -1,0 +1,71 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+CREATE DATABASE IF NOT EXISTS `igniter` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `igniter`;
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `login` varchar(32) NOT NULL,
+  `email` varchar(32) NOT NULL,
+  `avatar` varchar(250) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=9 ;
+
+DROP TABLE IF EXISTS `user_dialogues`;
+CREATE TABLE IF NOT EXISTS `user_dialogues` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `creation_date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=3 ;
+
+DROP TABLE IF EXISTS `user_dialogues_members`;
+CREATE TABLE IF NOT EXISTS `user_dialogues_members` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `dialogue_id` int(11) NOT NULL,
+  `status` enum('0','1') NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `dialogue_id` (`dialogue_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=5 ;
+
+DROP TABLE IF EXISTS `user_messages`;
+CREATE TABLE IF NOT EXISTS `user_messages` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `dialogue_id` int(11) NOT NULL,
+  `data` tinytext NOT NULL,
+  `stamp` datetime NOT NULL,
+  `status` enum('0','1') NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`,`dialogue_id`),
+  KEY `dialogue_id` (`dialogue_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=21 ;
+
+DROP TABLE IF EXISTS `user_message_status`;
+CREATE TABLE IF NOT EXISTS `user_message_status` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `message_id` int(11) NOT NULL,
+  `status` enum('0','1') NOT NULL DEFAULT '1',
+  `have_read` enum('0','1') NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `message_id` (`message_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=49 ;
+
+
+ALTER TABLE `user_dialogues_members`
+  ADD CONSTRAINT `user_dialogues_members_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `user_dialogues_members_ibfk_2` FOREIGN KEY (`dialogue_id`) REFERENCES `user_dialogues` (`id`);
+
+ALTER TABLE `user_messages`
+  ADD CONSTRAINT `user_messages_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `user_messages_ibfk_2` FOREIGN KEY (`dialogue_id`) REFERENCES `user_dialogues` (`id`);
+
+ALTER TABLE `user_message_status`
+  ADD CONSTRAINT `user_message_status_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  ADD CONSTRAINT `user_message_status_ibfk_2` FOREIGN KEY (`message_id`) REFERENCES `user_messages` (`id`);
