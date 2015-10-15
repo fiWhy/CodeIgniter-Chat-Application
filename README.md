@@ -9,7 +9,9 @@ To install - copy all files in your web server domains directory. Import igniter
 Configure your application/config/database.php file as below:
 
 $db['default']['hostname'] = 'your host name';
+
 $db['default']['username'] = 'your username';
+
 $db['default']['password'] = 'your password';
 
 And load http://localhost/yourdomain/ =) Good Luck!
